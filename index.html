@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magical Curtain Reveal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            overflow: hidden;
+            background: url('thumbnail.png') center/cover no-repeat;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .curtain-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+        }
+
+        .curtain {
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(45deg, #8B0000, #DC143C, #B22222);
+            position: relative;
+            transition: transform 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: inset -20px 0 40px rgba(0,0,0,0.3);
+        }
+
+        .curtain-left {
+            transform-origin: left;
+        }
+
+        .curtain-right {
+            transform-origin: right;
+        }
+
+        .curtain::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.1) 10px,
+                rgba(255,255,255,0.1) 20px
+            );
+        }
+
+        .curtain-left::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 20px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.4));
+        }
+
+        .curtain-right::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 100%;
+            background: linear-gradient(270deg, transparent, rgba(0,0,0,0.4));
+        }
+
+        .curtains-open .curtain-left {
+            transform: translateX(-100%);
+        }
+
+        .curtains-open .curtain-right {
+            transform: translateX(100%);
+        }
+
+        .click-instruction {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: 'Georgia', serif;
+            font-size: 2rem;
+            text-align: center;
+            z-index: 10;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            animation: pulse 2s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+        }
+
+        .glitter {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkle 3s linear infinite;
+        }
+
+        @keyframes sparkle {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(0deg) scale(0);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(90vh) rotate(36deg) scale(1);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(10vh) rotate(324deg) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(0vh) rotate(360deg) scale(0);
+            }
+        }
+
+        .glitter:nth-child(odd) {
+            background: gold;
+            animation-duration: 2.5s;
+        }
+
+        .glitter:nth-child(3n) {
+            background: silver;
+            animation-duration: 3.5s;
+        }
+
+        .glitter:nth-child(4n) {
+            background: #ff69b4;
+            animation-duration: 2.8s;
+        }
+
+        .glitter:nth-child(5n) {
+            background: #00ffff;
+            animation-duration: 3.2s;
+        }
+
+        .fade-out {
+            animation: fadeOut 1s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="curtain-container" id="curtainContainer">
+        <div class="curtain curtain-left"></div>
+        <div class="curtain curtain-right"></div>
+        <div class="click-instruction" id="instruction">
+            ✨ Lets Go ✨
+        </div>
+    </div>
+
+    <script>
+
+        function createGlitter() {
+            const glitter = document.createElement('div');
+            glitter.className = 'glitter';
+            glitter.style.left = Math.random() * 100 + '%';
+            glitter.style.animationDelay = Math.random() * 3 + 's';
+            document.body.appendChild(glitter);
+
+
+            setTimeout(() => {
+                if (glitter.parentNode) {
+                    glitter.parentNode.removeChild(glitter);
+                }
+            }, 4000);
+        }
+
+
+        function startGlitterEffect() {
+            setInterval(createGlitter, 200);
+        }
+
+
+        startGlitterEffect();
+
+
+        document.body.addEventListener('click', function() {
+            const container = document.getElementById('curtainContainer');
+            const instruction = document.getElementById('instruction');
+            
+
+            instruction.classList.add('fade-out');
+            
+
+            container.classList.add('curtains-open');
+            
+
+            setTimeout(() => {
+                window.location.href = 'https://arcane-2-0.vercel.app'; // Change this to your desired website
+            }, 2500);
+        });
+
+
+        document.body.addEventListener('click', function() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(createGlitter, i * 50);
+            }
+        });
+    </script>
+</body>
+</html>
